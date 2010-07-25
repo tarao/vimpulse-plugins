@@ -38,7 +38,7 @@ It provides text object for selecting a range between a character. Default key b
   foo, b|ar, baz
 deletes '<tt> bar</tt>', and <tt>vib:</tt> on
   :foo :b|ar :baz
-selects '<tt>bar </tt>.
+selects '<tt>bar </tt>'.
 
 === Remarks
 
