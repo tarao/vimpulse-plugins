@@ -30,7 +30,7 @@
 
 ;;;###autoload
 (define-globalized-minor-mode global-vimpulse-operator-comment-mode
-  vimpulse-comment-operator-mode vimpulse-operator-comment-mode-install)
+  vimpulse-operator-comment-mode vimpulse-operator-comment-mode-install)
 (global-vimpulse-operator-comment-mode)
 
 (provide 'vimpulse-operator-comment)
