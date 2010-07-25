@@ -22,7 +22,7 @@ comments out '<tt>bar</tt>', and <tt>Ci(</tt> comments out '<tt>foo bar</tt>'.
 
 The idea is taken from http://relaxedcolumn.blog8.fc2.com/blog-entry-154.html, which is to add comment/uncomment operator to Vim.
 
-= vimpulse-textobj-between.el
+== vimpulse-textobj-between.el
 
 === Usage
 
