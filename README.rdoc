@@ -1,0 +1,45 @@
+= vimpulse-plugin by tarao
+
+Plugins for Vimpulse ( http://www.emacswiki.org/emacs/Vimpulse ).
+
+== vimpulse-operator-comment.el
+
+=== Usage
+
+  (require 'vimpulse-operator-comment)
+
+It provides comment/uncomment operator. You can use it by typing <tt>C*</tt>, for example, <tt>CC</tt> for commenting out a line at the cursor, <tt>Ciw</tt> for commenting out a word at the cursor. The key can be changed by setting custom variable <tt>vimpulse-operator-comment-key</tt>.
+
+=== Examples
+
+<tt>|</tt> denotes the cursor position.
+
+<tt>Ciw</tt> on
+  (foo ba|r)
+comments out '<tt>bar</tt>', and <tt>Ci(</tt> comments out '<tt>foo bar</tt>'.
+
+=== Remarks
+
+The idea is taken from http://relaxedcolumn.blog8.fc2.com/blog-entry-154.html, which is to add comment/uncomment operator to Vim.
+
+= vimpulse-textobj-between.el
+
+=== Usage
+
+  (require 'vimpulse-textoj-between)
+
+It provides text object for selecting a range between a character. Default key bindings are <tt>ib</tt> and <tt>ab</tt>, which select a range between a character by which the command is followed. <tt>ib</tt> selects an inner range. These bindings can be changed by setting custom variable <tt>vimpulse-textobj-between-i-key</tt> and <tt>vimpulse-textobj-between-a-key</tt>.
+
+=== Examples
+
+<tt>|</tt> denotes the cursor position.
+
+<tt>dib,</tt> on
+  foo, b|ar, baz
+deletes '<tt> bar</tt>', and <tt>vib:</tt> on
+  :foo :b|ar :baz
+selects '<tt>bar </tt>.
+
+=== Remarks
+
+The idea is taken from http://d.hatena.ne.jp/thinca/20100614/1276448745, which is to define textobj-between for Vim.
