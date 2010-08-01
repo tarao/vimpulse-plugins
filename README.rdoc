@@ -2,6 +2,20 @@
 
 Plugins for Vimpulse ( http://www.emacswiki.org/emacs/Vimpulse ).
 
+== vimpulse-cjk.el
+
+=== Usage
+
+  (require 'vimpulse-cjk)
+
+It provides the following CJK patch for Viper/Vimpulse.
+- w/b acts properly on CJK texts
+- iw/aw text-object acts properly on CJK texts
+
+=== Remarks
+
+This patch only affects on the implementation of Viper. So, it works fine if you are not using Vimpulse but Viper.
+
 == vimpulse-operator-comment.el
 
 === Usage
