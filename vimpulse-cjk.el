@@ -1,29 +1,77 @@
+(defgroup vimpulse-cjk nil
+  "CJK patch for Viper/Vimpulse"
+  :prefix "vimpulse-cjk-"
+  :group 'vimpulse)
+
+(defcustom vimpulse-cjk-want-japanese-phrase-as-word nil
+  "Treats successive kanjis and hiraganas as a word.
+This is rather Emacs behaviour than Vim."
+  :type 'boolean
+  :group 'vimpulse-cjk)
+
+(defun viper-cjk-category (ch)
+  (let ((cat (char-category-set ch))
+        (list '(?K ; katakana
+                ?A ; full-width alpha-numeric
+                ?H ; hiragana
+                ?C ; kanji
+                ?k ; half-width kana
+                ?r ; Japanese roman ?
+                ?j ; Japanese
+                ?c ; Chinese
+                ?h ; Korean
+                )))
+    (let (r) (dolist (x list r) (setq r (or r (when (aref cat x) x)))))))
+
+(defun viper-cjk-category-after (pos)
+  (and (< pos (point-max)) (viper-cjk-category (char-after pos))))
+
+(defun viper-cjk-category-before (pos)
+  (and (< (point-min) pos) (viper-cjk-category (char-before pos))))
+
 (defun viper-looking-at-cjk ()
-  (let ((pos (point)))
-    (when (< pos (point-max))
-      (let* ((ch (char-after pos))
-             (cat (char-category-set ch)))
-        (or (aref cat ?c) ; Chinese
-            (aref cat ?j) ; Japanese
-            (aref cat ?h) ; Korean
-            )))))
+  (viper-cjk-category-after (point)))
+
+(defun viper-skip-cjk-forward (&optional cat)
+  (let ((cat (viper-cjk-category-after (point))))
+    (when cat
+      (while (= cat (or (viper-cjk-category-after (point)) 0))
+        (forward-char)))))
+
+(defun viper-skip-cjk-backward (&optional cat)
+  (let ((cat (viper-cjk-category-after (point))))
+    (when cat
+      (while (= cat (or (viper-cjk-category-before (point)) 0))
+        (backward-char)))))
+
 (defadvice viper-looking-at-alpha
   (around ad-viper-looking-at-alpha-cjk activate)
-  (or ad-do-it (viper-looking-at-cjk)))
+  (or ad-do-it (and vimpulse-cjk-want-japanese-phrase-as-word
+                    (viper-looking-at-cjk))))
+
 (defadvice viper-skip-alpha-forward
-  (around ad-viper-skip-alpha-forward (arg) activate)
-  (forward-word)
-  (when (and arg (looking-at arg))
-    (forward-char)
-    (when (viper-looking-at-alpha) (viper-skip-alpha-forward arg))))
+  (around ad-viper-skip-alpha-forward-cjk (arg) activate)
+  (let ((cjk (viper-looking-at-cjk)))
+    (if (and cjk (not vimpulse-cjk-want-japanese-phrase-as-word))
+        (viper-skip-cjk-forward)
+      (forward-word))
+    (when (and (not cjk) arg (looking-at arg))
+      (forward-char)
+      (when (viper-looking-at-alpha) (viper-skip-alpha-forward arg)))))
+
 (defadvice viper-skip-alpha-backward
-  (around ad-viper-skip-alpha-backward (arg) activate)
-  (backward-word)
-  (when (and (< (point-min) (point))
-             (string= (string (char-before (point))) (or arg "")))
-    (backward-char)
-    (when (and (< (point-min) (point))
-               (save-excursion (backward-char) (viper-looking-at-alpha)))
-      (viper-skip-alpha-backward arg))))
+  (around ad-viper-skip-alpha-backward-cjk (arg) activate)
+  (let ((cjk (viper-looking-at-cjk)))
+    (if (and cjk (not vimpulse-cjk-want-japanese-phrase-as-word))
+        (viper-skip-cjk-backward)
+      (backward-word))
+    (when (and (not cjk)
+               arg
+               (< (point-min) (point))
+               (string= (string (char-before (point))) arg))
+      (backward-char)
+      (when (and (< (point-min) (point))
+                 (save-excursion (backward-char) (viper-looking-at-alpha)))
+        (viper-skip-alpha-backward arg)))))
 
 (provide 'vimpulse-cjk)
