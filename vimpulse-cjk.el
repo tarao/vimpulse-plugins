@@ -16,7 +16,6 @@ This is rather Emacs behaviour than Vim."
                 ?H ; hiragana
                 ?C ; kanji
                 ?k ; half-width kana
-                ?r ; Japanese roman ?
                 ?j ; Japanese
                 ?c ; Chinese
                 ?h ; Korean
@@ -64,7 +63,12 @@ This is rather Emacs behaviour than Vim."
   (let ((cjk (viper-looking-at-cjk)))
     (if (and cjk (not vimpulse-cjk-want-japanese-phrase-as-word))
         (viper-skip-cjk-backward)
-      (backward-word))
+      (when (and (< (point-min) (point))
+                 (save-excursion
+                   (backward-char)
+                   (and (not (viper-end-of-word-p))
+                        (not (viper-looking-at-separator)))))
+        (backward-word)))
     (when (and (not cjk)
                arg
                (< (point-min) (point))
@@ -73,5 +77,20 @@ This is rather Emacs behaviour than Vim."
       (when (and (< (point-min) (point))
                  (save-excursion (backward-char) (viper-looking-at-alpha)))
         (viper-skip-alpha-backward arg)))))
+
+(defadvice viper-end-of-word-p
+  (around ad-viper-end-of-word-p-cjk activate)
+  (setq ad-return-value
+        (or ad-do-it
+            (if (viper-looking-at-cjk)
+                (let ((cat1 (viper-cjk-category-after (point)))
+                      (cat2 (save-excursion
+                              (forward-char)
+                              (or (viper-cjk-category-after (point)) 0))))
+                  (and (not (= cat1 cat2))
+                       (or (not vimpulse-cjk-want-japanese-phrase-as-word)
+                           (not (= cat1 ?C))
+                           (not (= cat2 0)))))
+              (save-excursion (forward-char) (viper-looking-at-cjk))))))
 
 (provide 'vimpulse-cjk)
