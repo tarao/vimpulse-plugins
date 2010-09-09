@@ -10,7 +10,7 @@
             'sexp)
   :group 'vimpulse-operator-comment)
 
-(vimpulse-convert-to-operator 'comment-or-uncomment-region)
+(vimpulse-convert-to-operator comment-or-uncomment-region)
 (vimpulse-define-key 'vimpulse-operator-comment-mode 'vi-state
                      vimpulse-operator-comment-key
                      'comment-or-uncomment-region-operator)
