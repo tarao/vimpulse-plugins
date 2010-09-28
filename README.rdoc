@@ -36,6 +36,19 @@ comments out '<tt>bar</tt>', and <tt>Ci(</tt> comments out '<tt>foo bar</tt>'.
 
 The idea is taken from http://relaxedcolumn.blog8.fc2.com/blog-entry-154.html, which is to add comment/uncomment operator to Vim.
 
+== vimpulse-relative-linum.el
+
+=== Usage
+
+  (require 'vimpulse-relative-linum)
+
+It provides relative line numbers shown up when you hit operator keys.
+
+=== Dependencies
+
+- linum.el http://stud4.tuwien.ac.at/~e0225855/linum/linum.html (only for emacs-version < 23)
+- linum+.el http://github.com/tarao/elisp/raw/master/linum+.el
+
 == vimpulse-textobj-between.el
 
 === Usage
