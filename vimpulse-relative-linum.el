@@ -16,19 +16,23 @@
 (define-minor-mode vimpulse-relative-linum-mode
   "Show relative line numbers when operators are activated."
   :group 'vimpulse-relative-linum
-  (if vimpulse-relative-linum-mode
-      (progn
-        (add-hook 'pre-command-hook 'vimpulse-relative-linum-off)
-        (add-hook 'post-command-hook 'vimpulse-relative-linum-off)
-        (setq vimpulse-relative-linum-timer
-              (run-with-idle-timer vimpulse-relative-linum-delay nil
-                                   'vimpulse-relative-linum-activate)))
-    (cancel-timer vimpulse-relative-linum-timer)
-    (when vimpulse-relative-linum-activated
-      (relative-linum-mode 0)
-      (setq vimpulse-relative-linum-activated nil))
-    (remove-hook 'pre-command-hook 'vimpulse-relative-linum-off)
-    (remove-hook 'post-command-hook 'vimpulse-relative-linum-off)))
+  (let ((exit-cmd `(lambda ()
+                     (interactive)
+                     (save-excursion (set-buffer ,(current-buffer))
+                                     (vimpulse-relative-linum-off)))))
+    (if vimpulse-relative-linum-mode
+        (progn
+          (add-hook 'pre-command-hook exit-cmd)
+          (add-hook 'post-command-hook exit-cmd)
+          (setq vimpulse-relative-linum-timer
+                (run-with-idle-timer vimpulse-relative-linum-delay nil
+                                     'vimpulse-relative-linum-activate)))
+      (cancel-timer vimpulse-relative-linum-timer)
+      (when vimpulse-relative-linum-activated
+        (relative-linum-mode 0)
+        (setq vimpulse-relative-linum-activated nil))
+      (remove-hook 'pre-command-hook exit-cmd)
+      (remove-hook 'post-command-hook exit-cmd))))
 
 (defun vimpulse-relative-linum-off ()
   (interactive)
