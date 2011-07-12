@@ -10,13 +10,26 @@
             'sexp)
   :group 'vimpulse-operator-moccur)
 
-(vimpulse-convert-to-operator moccur-grep-find-region)
+(defcustom vimpulse-operator-moccur-use-current-directory nil
+  "Uses current directory for grep and does not ask interactively."
+  :type 'boolean
+  :group 'vimpulse-operator-moccur)
+
+(defun vimpulse-moccur-grep-find-region (beg end &optional dir)
+  (interactive "r")
+  (unless dir
+    (setq dir (or (and (not vimpulse-operator-moccur-use-current-directory)
+                       (read-directory-name "Directory: "))
+                  (file-name-directory (buffer-file-name)))))
+  (moccur-grep-find dir (list (buffer-substring-no-properties beg end))))
+
+(vimpulse-convert-to-operator vimpulse-moccur-grep-find-region)
 (vimpulse-define-key 'vimpulse-operator-moccur-mode 'vi-state
                      vimpulse-operator-moccur-grep-find-key
-                     'moccur-grep-find-region-operator)
+                     'vimpulse-moccur-grep-find-region-operator)
 (vimpulse-define-key 'vimpulse-operator-moccur-mode 'visual-state
                      vimpulse-operator-moccur-grep-find-key
-                     'moccur-grep-find-region-operator)
+                     'vimpulse-moccur-grep-find-region-operator)
 
 ;;;###autoload
 (define-minor-mode vimpulse-operator-moccur-mode
