@@ -36,6 +36,18 @@ comments out '<tt>bar</tt>', and <tt>Ci(</tt> comments out '<tt>foo bar</tt>'.
 
 The idea is taken from http://relaxedcolumn.blog8.fc2.com/blog-entry-154.html, which is to add comment/uncomment operator to Vim.
 
+== vimpulse-operator-moccur.el
+
+=== Usage
+
+  (require 'vimpulse-operator-moccur)
+
+It provides an operator for <tt>moccur-grep-find</tt> command. You can use it by typing <tt>M*</tt>, for example, <tt>Miw</tt> for grepping a word under the cursor. The key can be changed by setting custom variable <tt>vimpulse-operator-moccur-grep-find-key</tt>. You will be asked in which directory files to be grepped are located. Setting custom variable <tt>vimpulse-operator-moccur-use-current-directory</tt> disables asking a directory and files in the current directory are grepped.
+
+=== Dependencies
+
+- color-moccur.el http://www.emacswiki.org/emacs/color-moccur.el
+
 == vimpulse-relative-linum.el
 
 === Usage
