@@ -1,3 +1,5 @@
+(require 'color-moccur)
+
 (defgroup vimpulse-operator-moccur nil
   "Moccur operator for Vimpulse"
   :prefix "vimpulse-operator-moccur-"
