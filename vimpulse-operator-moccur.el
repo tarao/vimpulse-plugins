@@ -21,7 +21,7 @@
   (interactive "r")
   (unless dir
     (setq dir (or (and (not vimpulse-operator-moccur-use-current-directory)
-                       (read-directory-name "Directory: "))
+                       (moccur-grep-read-directory))
                   (file-name-directory (buffer-file-name)))))
   (moccur-grep-find dir (list (buffer-substring-no-properties beg end))))
 
